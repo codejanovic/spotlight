@@ -1,5 +1,8 @@
 package sample;
 
+import com.gluonhq.ignite.guice.GuiceContext;
+import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -7,19 +10,37 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class Main extends Application {
+import java.util.Arrays;
+
+public class App extends Application implements SpotlightApp {
+
+    class GuiceModule extends AbstractModule {
+        @Override protected void configure() {
+
+        }
+    }
 
     private double xOffset = 0;
     private double yOffset = 0;
 
+    @Inject
+    private FXMLLoader fxmlLoader;
+    private GuiceContext context = new GuiceContext(this, () -> Arrays.asList(new GuiceModule()));
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/main.fxml"));
-        makeSceneMoveable(root, primaryStage);
+        context.init();
+        fxmlLoader.setLocation(mainViewLocation());
+        Parent mainView = fxmlLoader.load();
+        makeSceneMoveable(mainView, primaryStage);
 
         primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setTitle("Spotlight");
-        primaryStage.setScene(new Scene(root, 600, 300));
+        primaryStage.setScene(new Scene(mainView, 600, 300));
         primaryStage.setResizable(false);
         primaryStage.show();
     }
@@ -33,10 +54,5 @@ public class Main extends Application {
             primaryStage.setX(event.getScreenX() - xOffset);
             primaryStage.setY(event.getScreenY() - yOffset);
         });
-    }
-
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }
