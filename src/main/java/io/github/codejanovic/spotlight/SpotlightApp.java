@@ -1,4 +1,4 @@
-package sample;
+package io.github.codejanovic.spotlight;
 
 import java.net.URL;
 

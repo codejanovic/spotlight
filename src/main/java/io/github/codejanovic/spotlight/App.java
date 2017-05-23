@@ -1,4 +1,4 @@
-package sample;
+package io.github.codejanovic.spotlight;
 
 import com.gluonhq.ignite.guice.GuiceContext;
 import com.google.inject.AbstractModule;
